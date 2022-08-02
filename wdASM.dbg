@@ -1,0 +1,67 @@
+file ../bin/avx_test.dbg
+set disassembly-flavor intel
+
+# set breakpoints for debugging 32 bit functions
+break avx_test.d:52
+break smul32fp256.asm:smul32fp256
+break smul32fp256.asm:stage2
+break smul32fp256.asm:stage3
+break smul32fp256.asm:stage4
+break avx_test.d:58
+break vadd32fp256.asm:vadd32fp256
+break vadd32fp256.asm:stage2
+break vadd32fp256.asm:stage3
+break vadd32fp256.asm:stage4
+break avx_test.d:64
+break vdiv32fp256.asm:vdiv32fp256
+break vdiv32fp256.asm:stage2
+break vdiv32fp256.asm:stage3
+break vdiv32fp256.asm:stage4
+break avx_test.d:70
+break vmul32fp256.asm:vmul32fp256
+break vmul32fp256.asm:stage2
+break vmul32fp256.asm:stage3
+break vmul32fp256.asm:stage4
+break avx_test.d:76
+break vspr32fp256.asm:vspr32fp256
+break vspr32fp256.asm:stage2
+break vspr32fp256.asm:stage3
+break vspr32fp256.asm:stage4
+break avx_test.d:79
+break vsub32fp256.asm:vsub32fp256
+break vsub32fp256.asm:stage2
+break vsub32fp256.asm:stage3
+break vsub32fp256.asm:stage4
+
+# set breakpoints for debugging 64 bit functions
+break avx_test.d:104
+break smul64fp256.asm:smul64fp256
+break smul64fp256.asm:stage2
+break smul64fp256.asm:stage3
+break smul64fp256.asm:stage4
+break avx_test.d:110
+break vadd64fp256.asm:vadd64fp256
+break vadd64fp256.asm:stage2
+break vadd64fp256.asm:stage3
+break vadd64fp256.asm:stage4
+break avx_test.d:116
+break vdiv64fp256.asm:vdiv64fp256
+break vdiv64fp256.asm:stage2
+break vdiv64fp256.asm:stage3
+break vdiv64fp256.asm:stage4
+break avx_test.d:122
+break vmul64fp256.asm:vmul64fp256
+break vmul64fp256.asm:stage2
+break vmul64fp256.asm:stage3
+break vmul64fp256.asm:stage4
+break avx_test.d:128
+break vspr64fp256.asm:vspr64fp256
+break vspr64fp256.asm:stage2
+break vspr64fp256.asm:stage3
+break vspr64fp256.asm:stage4
+break avx_test.d:131
+break vsub64fp256.asm:vsub64fp256
+break vsub64fp256.asm:stage2
+break vsub64fp256.asm:stage3
+break vsub64fp256.asm:stage4
+run
