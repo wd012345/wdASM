@@ -4,16 +4,20 @@
 
 
 # define directory path variables
-PROJECTS = ..
-ASM      = $(PROJECTS)/wdASM
-BIN      = $(PROJECTS)/bin
-LIB      = $(PROJECTS)/lib
+#PROJECTS = ..
+#ASM      = $(PROJECTS)/wdASM
+BIN      = $(HOME)/.local/bin
+LIB      = $(HOME)/.local/lib
 
 
 # define modules
 WDASM     = wdASM
-WDASM_MOD = smul32fp256 \
+WDASM_MOD = sadd32fp256 \
+            sadd64fp256 \
+            smul32fp256 \
             smul64fp256 \
+            ssub32fp256 \
+            ssub64fp256 \
             vadd32fp256 \
             vadd64fp256 \
             vdiv32fp256 \
@@ -63,6 +67,14 @@ $(WDASM_LIB) : $(WDASM_OBJ)
 	rm $(WDASM_OBJ)
 	rm $(WDASM_DBG_OBJ)
 
+sadd32fp256.o : sadd32fp256.asm
+	nasm $(ASMD) -l sadd32fp256.lst -o sadd32fp256.dbg.o sadd32fp256.asm
+	nasm $(ASMR) -o sadd32fp256.o sadd32fp256.asm
+
+sadd64fp256.o : sadd64fp256.asm
+	nasm $(ASMD) -l sadd64fp256.lst -o sadd64fp256.dbg.o sadd64fp256.asm
+	nasm $(ASMR) -o sadd64fp256.o sadd64fp256.asm
+
 smul32fp256.o : smul32fp256.asm
 	nasm $(ASMD) -l smul32fp256.lst -o smul32fp256.dbg.o smul32fp256.asm
 	nasm $(ASMR) -o smul32fp256.o smul32fp256.asm
@@ -70,6 +82,14 @@ smul32fp256.o : smul32fp256.asm
 smul64fp256.o : smul64fp256.asm
 	nasm $(ASMD) -l smul64fp256.lst -o smul64fp256.dbg.o smul64fp256.asm
 	nasm $(ASMR) -o smul64fp256.o smul64fp256.asm
+
+ssub32fp256.o : ssub32fp256.asm
+	nasm $(ASMD) -l ssub32fp256.lst -o ssub32fp256.dbg.o ssub32fp256.asm
+	nasm $(ASMR) -o ssub32fp256.o ssub32fp256.asm
+
+ssub64fp256.o : ssub64fp256.asm
+	nasm $(ASMD) -l ssub64fp256.lst -o ssub64fp256.dbg.o ssub64fp256.asm
+	nasm $(ASMR) -o ssub64fp256.o ssub64fp256.asm
 
 vadd32fp256.o : vadd32fp256.asm
 	nasm $(ASMD) -l vadd32fp256.lst -o vadd32fp256.dbg.o vadd32fp256.asm
@@ -114,16 +134,16 @@ vsub64fp256.o : vsub64fp256.asm
 
 # phoney targets
 clean : 
-	rm $(WDASM_LIB)
-	rm $(WDASM_DBG_LIB)
-	rm $(WDASM_EXE)
-	rm $(WDASM_DBG_EXE)
+	rm -f $(WDASM_LIB)
+	rm -f $(WDASM_DBG_LIB)
+	rm -f $(WDASM_EXE)
+	rm -f $(WDASM_DBG_EXE)
 
 debug :
 	gdb -x wdASM.dbg
 
 run :
-	../bin/avx_test
+	$(BIN)/$(WDASM_EXE)
 
 
 

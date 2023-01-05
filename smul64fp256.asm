@@ -37,11 +37,15 @@
 ; extern(C) 
 ; double * smul64fp256(ulong N, double *u, double *s, double *w);
 ; N = number of components of tensor u          --> rdi
-; u = address to first vector operand           --> rsi
+; u = address to first tensor operand           --> rsi
 ; s = address to double precision scalar        --> rdx
-; w = address to resulting sum vector           --> rcx
-; 
+; w = address to resulting product tensor       --> rcx
+; ____________________________________________________________________________
+;
+; todo:
+;
 ; author:       Stefan Wittwer, info@wittwer-datatools.ch
+; ____________________________________________________________________________
 
 
 ; data segment

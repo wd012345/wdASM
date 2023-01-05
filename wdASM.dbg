@@ -1,4 +1,4 @@
-file ../bin/avx_test.dbg
+file $(HOME)/.local/wdASM.dbg
 set disassembly-flavor intel
 
 # set breakpoints for debugging 32 bit functions

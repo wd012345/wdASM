@@ -1,13 +1,13 @@
-;file:          smul32fp256.asm
+;file:          ssub32fp256.asm
 ;
-; Assembly function that multiplies 32bit floating point components of a 
-; tensor with a 32bit floating point scalar according to:
-;     w_{111...} = u_{111...} * s
-;     w_{211...} = u_{211...} * s
+; Assembly function that subtracts a 32bit floating point scalar from the
+; 32bit floating point components of a tensor according to:
+;     w_{111...} = u_{111...} - s
+;     w_{211...} = u_{211...} - s
 ;           .
 ;           .
 ;           .
-;     w_{kmn...} = u_{kmn...} * s
+;     w_{kmn...} = u_{kmn...} - s
 ;
 ; The AVX2 registers and AVX2 instruction set is used. The function
 ; processes four looped stages, each processing
@@ -39,7 +39,7 @@
 ; N = number of components of tensor u          --> rdi
 ; u = address to first tensor operand           --> rsi
 ; s = address to single precision scalar        --> rdx
-; w = address to resulting product tensor       --> rcx
+; w = address to resulting difference tensor    --> rcx
 ; ____________________________________________________________________________
 ;
 ; todo:
@@ -54,8 +54,8 @@
 
 ; code segment
 section .text
-    global smul32fp256
-smul32fp256:
+    global ssub32fp256
+ssub32fp256:
     enter           32,0
     vbroadcastsd    ymm15,[rdx]                 ; broadcast scalar argument
 ; start looped stage 1
@@ -71,13 +71,13 @@ loop1:
     vmovapd     ymm9,[rsi+rax*8+128]
     vmovapd     ymm11,[rsi+rax*8+160]
     vmovapd     ymm13,[rsi+rax*8+192]
-    vmulpd      ymm0,ymm1,ymm15                 ; process looped stage 1
-    vmulpd      ymm2,ymm3,ymm15
-    vmulpd      ymm4,ymm5,ymm15
-    vmulpd      ymm6,ymm7,ymm15
-    vmulpd      ymm8,ymm9,ymm15
-    vmulpd      ymm10,ymm11,ymm15
-    vmulpd      ymm12,ymm13,ymm15
+    vsubpd      ymm0,ymm1,ymm15                 ; process looped stage 1
+    vsubpd      ymm2,ymm3,ymm15
+    vsubpd      ymm4,ymm5,ymm15
+    vsubpd      ymm6,ymm7,ymm15
+    vsubpd      ymm8,ymm9,ymm15
+    vsubpd      ymm10,ymm11,ymm15
+    vsubpd      ymm12,ymm13,ymm15
     vmovapd     [rcx+rax*8],ymm0                ; write results
     vmovapd     [rcx+rax*8+32],ymm2
     vmovapd     [rcx+rax*8+64],ymm4
@@ -97,7 +97,7 @@ stage2:
     jl          stage3                          ; true => go to stage 3
 loop2:
     vmovapd     ymm1,[rsi+rax*8]                ; load first operands
-    vmulpd      ymm0,ymm1,ymm15                 ; process looped stage 2
+    vsubpd      ymm0,ymm1,ymm15                 ; process looped stage 2
     vmovapd     [rcx+rax*8],ymm0                ; write results
     add         rax,32                          ; dA == 4N_f
     add         rbx,8                           ; N_f += 8 components
@@ -111,7 +111,7 @@ stage3:
     jl          stage4                          ; true => go to stage 4
 loop3:
     vmovapd     xmm1,[rsi+rax]                  ; load first operand
-    vmulpd      xmm0,xmm1,xmm15                 ; process looped stage 3
+    vsubpd      xmm0,xmm1,xmm15                 ; process looped stage 3
     vmovapd     [rcx+rax],xmm0                  ; write results
     add         rax,16                          ; dA == 4N_f
     add         rbx,4                           ; N_f += 4 components
@@ -125,7 +125,7 @@ stage4:
     jl          return                          ; true => go to return
 loop4:
     movss       xmm0,[rsi+rax]                  ; load first operand
-    mulss       xmm0,[rdx]                      ; process looped stage 4
+    subss       xmm0,[rdx]                      ; process looped stage 4
     movss       [rcx+rax],xmm0                  ; write result
     add         rax,4                           ; dA == 4N_f
     inc         rbx                             ; N_f += 1
@@ -137,4 +137,4 @@ return:
     ret
 
 
-; end of smul32fp256.asm
+; end of ssub32fp256.asm
